@@ -1,7 +1,7 @@
 use crate::{PrefixDictionary, SearchResult};
 
 #[test]
-pub fn test_simple_1() {
+pub fn test_simple_strings() {
     let mut dict = PrefixDictionary::new();
     dict.feed(["dictionary", "lapin", "lapins", "lapine"].map(|x| x.chars()));
     assert_eq!(4, dict.len());

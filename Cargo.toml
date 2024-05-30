@@ -10,9 +10,6 @@ repository = "https://github.com/JeWaVe/head-dictionary"
 documentation = "https://docs.rs/prefix_dictionary/"
 readme = "README.md"
 exclude = [
-    "target/criterion/*",
-    ".cargo_vcs_info.json",
-    ".gitignore",
     "Cargo.toml.orig",
 ]
 
