@@ -1,4 +1,6 @@
 use std::collections::HashMap;
+use std::marker::PhantomData;
+use core::hash::Hash;
 
 bitflags::bitflags! {
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -9,12 +11,12 @@ bitflags::bitflags! {
     }
 }
 
-struct Node {
+struct Node<I> {
     is_end_of_word: bool,
-    childs:  HashMap<char, Node>
+    childs:  HashMap<I, Node<I>>
 }
 
-impl Node {
+impl<I> Node<I> {
     pub fn new() -> Self {
         Node {
             is_end_of_word : false,
@@ -23,16 +25,25 @@ impl Node {
     }
 }
 
-pub struct PrefixDictionary {
-    root: Node,
-    count: u64
+pub struct PrefixDictionary<I, T> {
+    root: Node<I>,
+    count: u64,
+    _phantom_i: PhantomData<I>,
+    _phantom_t: PhantomData<T>
 }
 
-impl PrefixDictionary {
+impl<I, T>  PrefixDictionary<I, T> 
+    where T: IntoIterator<Item = I>,
+          I: Eq,
+          I: PartialEq<I>,
+          I: Hash,
+          I: Copy {
     pub fn new () -> Self {
         PrefixDictionary {
             root: Node::new(),
-            count: 0
+            count: 0,
+            _phantom_i: PhantomData,
+            _phantom_t: PhantomData
         }
     }
 
@@ -40,15 +51,15 @@ impl PrefixDictionary {
         self.count
     }
 
-    pub fn feed(&mut self, words: &[&str]) {
+    pub fn feed(&mut self, words: impl IntoIterator<Item = T>) {
         for w in words {
             self.insert(w);
         }
     }
 
-    pub fn insert(&mut self, word: &str) {
+    pub fn insert(&mut self, word: T) {
         let mut node = &mut self.root;
-        for c in word.chars() {
+        for c in word.into_iter() {
             if !node.childs.contains_key(&c) {
                 node.childs.insert(c, Node::new());
             }
@@ -60,9 +71,9 @@ impl PrefixDictionary {
         self.count += 1
     }
 
-    pub fn contains(&mut self, word: &str) -> Option<SearchResult> {
+    pub fn contains(&mut self, word: T) -> Option<SearchResult> {
         let mut node = &mut self.root;
-        for c in word.chars() {
+        for c in word.into_iter() {
             if !node.childs.contains_key(&c) {
                 return None;
             }
