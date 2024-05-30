@@ -1,0 +1,24 @@
+[package]
+name = "prefix_dictionary"
+version = "0.0.1"
+edition = "2021"
+authors = ["Regis Portalez <info@example.com>"]
+license = "MIT"
+keywords = ["dictionary", "prefix", "search", "data structure"]
+homepage = "https://github.com/JeWaVe/head-dictionary"
+repository = "https://github.com/JeWaVe/head-dictionary"
+documentation = "https://docs.rs/prefix_dictionary/"
+readme = "README.md"
+exclude = [
+    "target/criterion/*",
+    ".cargo_vcs_info.json",
+    ".gitignore",
+    "Cargo.toml.orig",
+]
+
+description = """
+Data structure similar to a dictionary, but enabling search for prefixes
+"""
+
+[dependencies]
+bitflags = "2.5.0"
